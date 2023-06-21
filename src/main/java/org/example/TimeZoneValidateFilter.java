@@ -16,19 +16,21 @@ import java.time.ZoneId;
 public class TimeZoneValidateFilter extends HttpFilter {
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws IOException, ServletException {
-        String timezone = req.getParameter("timezone");
-        if(timezone == null || validTimeZone(timezone.replaceAll(" ", "+"))){
+
+        String timeZone = req.getParameter("timezone");
+
+        if(timeZone == null || validTimeZone(timeZone.replaceAll(" ", "+"))){
             chain.doFilter(req,resp);
         }else {
             resp.setContentType("text/html");
-            resp.getWriter().write("ERROR 400 Invalid timezone");
+            resp.getWriter().write("ERROR 400: Invalid timezone");
             resp.setStatus(400);
             resp.getWriter().close();
         }
     }
-    private boolean validTimeZone(String timezone) {
+    private boolean validTimeZone(String timeZone) {
         try {
-            ZoneId.of(timezone);
+            ZoneId.of(timeZone);
             return true;
         }catch (DateTimeException e){
             return false;
